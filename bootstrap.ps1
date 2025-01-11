@@ -7,7 +7,7 @@ $targetPath = "$env:ProgramData\serverstart\powershell"
 $updateFile = Join-Path $targetPath "update.json"
 $scriptsPath = Join-Path $targetPath "scripts"
 
-Write-Host "[Bootstrap] Initializing serverstart PowerShell Library" -ForegroundColor Cyan
+Write-Host "[Bootstrap] Initializing serverstart PowerShell Library…" -ForegroundColor Cyan
 
 # Ensure our base structure exists
 if (-not (Test-Path $targetPath)) {
@@ -98,19 +98,19 @@ try {
             }
         }
     }
-    
+
     # Load all library functions and scripts
-    Write-Host "[Bootstrap] Loading PowerShell Library..."
     $mainScripts = Get-ChildItem -Path $targetPath -Filter "*.ps1" -Exclude "bootstrap.ps1"
     $additionalScripts = if (Test-Path $scriptsPath) { Get-ChildItem -Path $scriptsPath -Filter "*.ps1" -Recurse } else { @() }
     
     $totalScripts = ($mainScripts + $additionalScripts).Count
     $mainScripts + $additionalScripts | ForEach-Object { . $_.FullName }
-    Write-Host "[Bootstrap] Loaded $totalScripts script files"
+    Write-Host "[Bootstrap] serverstart PowerShell Library successfully initialized and loaded ($totalScripts script files)." -ForegroundColor Green
 
 } catch {
     Write-Host "[Bootstrap] Critical error loading library: $_" -ForegroundColor Red
     throw
 }
+
 
 Write-Host "[Bootstrap] serverstart PowerShell Library successfully initialized" -ForegroundColor Green
