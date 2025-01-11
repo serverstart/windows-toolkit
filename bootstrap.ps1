@@ -98,19 +98,15 @@ try {
             }
         }
     }
-
-    # Load all library functions
-    Write-Host "[Bootstrap] Loading PowerShell Library from: $targetPath"
-    Get-ChildItem -Path $targetPath -Filter "*.ps1" -Exclude "bootstrap.ps1" | ForEach-Object { . $_.FullName }
-
-    # Load additional scripts from scripts directory
-    if (Test-Path $scriptsPath) {
-        Write-Host "[Bootstrap] Loading additional scripts from: $scriptsPath"
-        Get-ChildItem -Path $scriptsPath -Filter "*.ps1" -Recurse | ForEach-Object {
-            Write-Host "[Bootstrap] Loading script: $($_.Name)"
-            . $_.FullName
-        }
-    }
+    
+    # Load all library functions and scripts
+    Write-Host "[Bootstrap] Loading PowerShell Library..."
+    $mainScripts = Get-ChildItem -Path $targetPath -Filter "*.ps1" -Exclude "bootstrap.ps1"
+    $additionalScripts = if (Test-Path $scriptsPath) { Get-ChildItem -Path $scriptsPath -Filter "*.ps1" -Recurse } else { @() }
+    
+    $totalScripts = ($mainScripts + $additionalScripts).Count
+    $mainScripts + $additionalScripts | ForEach-Object { . $_.FullName }
+    Write-Host "[Bootstrap] Loaded $totalScripts script files"
 
 } catch {
     Write-Host "[Bootstrap] Critical error loading library: $_" -ForegroundColor Red
