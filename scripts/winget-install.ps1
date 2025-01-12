@@ -303,18 +303,18 @@ function Install-App ($AppID, $AppArgs) {
 
         #If PreInstall script exist
         if ($ModsPreInstall) {
-            Write-Host "-> Modifications for $AppID before install are being applied..." "Yellow"
+            Write-Host "-> Modifications for $AppID before install are being applied..." -ForegroundColor "Yellow"
             & "$ModsPreInstall"
         }
 
         #Install App
-        Write-Host "-> Installing $AppID..." "Yellow"
+        Write-Host "-> Installing $AppID..." -ForegroundColor "Yellow"
         $WingetArgs = "install --id $AppID -e --accept-package-agreements --accept-source-agreements -s winget -h $AppArgs" -split " "
         Write-Host "-> Running: `"$Winget`" $WingetArgs"
         & "$Winget" $WingetArgs | Where-Object { $_ -notlike "   *" } | Tee-Object -file $LogFile -Append
 
         if ($ModsInstall) {
-            Write-Host "-> Modifications for $AppID during install are being applied..." "Yellow"
+            Write-Host "-> Modifications for $AppID during install are being applied..." -ForegroundColor "Yellow"
             & "$ModsInstall"
         }
 
@@ -324,11 +324,11 @@ function Install-App ($AppID, $AppArgs) {
             Write-Host "-> $AppID successfully installed." -ForegroundColor "Green"
 
             if ($ModsInstalledOnce) {
-                Write-Host "-> Modifications for $AppID after install (one time) are being applied..." "Yellow"
+                Write-Host "-> Modifications for $AppID after install (one time) are being applied..." -ForegroundColor "Yellow"
                 & "$ModsInstalledOnce"
             }
             elseif ($ModsInstalled) {
-                Write-Host "-> Modifications for $AppID after install are being applied..." "Yellow"
+                Write-Host "-> Modifications for $AppID after install are being applied..." -ForegroundColor "Yellow"
                 & "$ModsInstalled"
             }
 
@@ -360,18 +360,18 @@ function Uninstall-App ($AppID, $AppArgs) {
 
         #If PreUninstall script exist
         if ($ModsPreUninstall) {
-            Write-Host "-> Modifications for $AppID before uninstall are being applied..." "Yellow"
+            Write-Host "-> Modifications for $AppID before uninstall are being applied..." -ForegroundColor "Yellow"
             & "$ModsPreUninstall"
         }
 
         #Uninstall App
-        Write-Host "-> Uninstalling $AppID..." "Yellow"
+        Write-Host "-> Uninstalling $AppID..." -ForegroundColor "Yellow"
         $WingetArgs = "uninstall --id $AppID -e --accept-source-agreements -h" -split " "
         Write-Host "-> Running: `"$Winget`" $WingetArgs"
         & "$Winget" $WingetArgs | Where-Object { $_ -notlike "   *" } | Tee-Object -file $LogFile -Append
 
         if ($ModsUninstall) {
-            Write-Host "-> Modifications for $AppID during uninstall are being applied..." "Yellow"
+            Write-Host "-> Modifications for $AppID during uninstall are being applied..." -ForegroundColor "Yellow"
             & "$ModsUninstall"
         }
 
@@ -380,7 +380,7 @@ function Uninstall-App ($AppID, $AppArgs) {
         if (!($IsInstalled)) {
             Write-Host "-> $AppID successfully uninstalled." -ForegroundColor "Green"
             if ($ModsUninstalled) {
-                Write-Host "-> Modifications for $AppID after uninstall are being applied..." "Yellow"
+                Write-Host "-> Modifications for $AppID after uninstall are being applied..." -ForegroundColor "Yellow"
                 & "$ModsUninstalled"
             }
 
