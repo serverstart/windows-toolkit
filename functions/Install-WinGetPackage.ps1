@@ -1,12 +1,11 @@
 function Install-WinGetPackage {
     param(
-        [Parameter(Mandatory)]
-        [Parameter(Mandatory = $True, ParameterSetName = "AppIDs")] [String[]] $AppIDs,
+        [Parameter(Mandatory = $True)] [String] $AppID,
         [switch]$Uninstall,
         [switch]$AllowUpgrade
     )
 
-    Begin-Task "Install WinGet Package"
+    Begin-Task "Install WinGet Package $AppID"
 
     # Über Registry WinGet-AutoUpdate ermitteln
     $WAUInstallLocation = "$env:programfiles\Winget-AutoUpdate"
@@ -36,7 +35,7 @@ function Install-WinGetPackage {
 
 
     # Erstelle Parameter-String
-    $params = "-AppIDs `"$AppIDs`" -LogPath `"$LogPath`""
+    $params = "-AppIDs `"$AppID`" -LogPath `"$LogPath`""
     if ($Uninstall) { $params += " -Uninstall" }
     if ($AllowUpgrade) { $params += " -AllowUpgrade" }
 
