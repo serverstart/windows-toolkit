@@ -552,7 +552,7 @@ if ($Winget) {
         $AppID, $AppArgs = ($App_Full.Trim().Split(" ", 2))
 
         #Log current App
-        Write-Host "Start $AppID processing..." "Blue"
+        Write-Host "Start $AppID processing..." -ForegroundColor "Blue"
 
         #Install or Uninstall command
         if ($Uninstall) {
@@ -568,7 +568,7 @@ if ($Winget) {
         }
 
         #Log current App
-        Write-Host "$AppID processing finished!`n" "Blue"
+        Write-Host "$AppID processing finished!`n" -ForegroundColor "Blue"
         Start-Sleep 1
     }
 }
