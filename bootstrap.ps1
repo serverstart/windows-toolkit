@@ -104,12 +104,9 @@ try {
     $totalFunctions = ($functionFiles).Count
 
     $functionFiles | ForEach-Object { . $_.FullName }
-    Write-Host "[Bootstrap] serverstart PowerShell Library successfully initialized and loaded ($totalFunctions function files)." -ForegroundColor Green
+    Write-Host "[Bootstrap] serverstart PowerShell Library successfully initialized (loaded $totalFunctions function files)." -ForegroundColor Green
 
 } catch {
     Write-Host "[Bootstrap] Critical error loading library: $_" -ForegroundColor Red
     throw
 }
-
-
-Write-Host "[Bootstrap] serverstart PowerShell Library successfully initialized" -ForegroundColor Green
