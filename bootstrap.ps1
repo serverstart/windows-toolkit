@@ -5,7 +5,7 @@
 # - Minimal disk operations: Only updates files when actual changes are detected via hash comparison
 $targetPath = "$env:ProgramData\serverstart\powershell"
 $updateFile = Join-Path $targetPath "update.json"
-$scriptsPath = Join-Path $targetPath "scripts"
+$functionsPath = Join-Path $targetPath "functions"
 
 Write-Host "[Bootstrap] Initializing serverstart PowerShell Library…" -ForegroundColor Cyan
 
@@ -100,12 +100,11 @@ try {
     }
 
     # Load all library functions and scripts
-    $mainScripts = Get-ChildItem -Path $targetPath -Filter "*.ps1" -Exclude "bootstrap.ps1"
-    $additionalScripts = if (Test-Path $scriptsPath) { Get-ChildItem -Path $scriptsPath -Filter "*.ps1" -Recurse } else { @() }
-    
-    $totalScripts = ($mainScripts + $additionalScripts).Count
-    $mainScripts + $additionalScripts | ForEach-Object { . $_.FullName }
-    Write-Host "[Bootstrap] serverstart PowerShell Library successfully initialized and loaded ($totalScripts script files)." -ForegroundColor Green
+    $functionFiles = if (Test-Path $functionsPath) { Get-ChildItem -Path $functionsPath -Filter "*.ps1" -Recurse } else { @() }
+    $totalFunctions = ($functionFiles).Count
+
+    $functionFiles | ForEach-Object { . $_.FullName }
+    Write-Host "[Bootstrap] serverstart PowerShell Library successfully initialized and loaded ($totalFunctions function files)." -ForegroundColor Green
 
 } catch {
     Write-Host "[Bootstrap] Critical error loading library: $_" -ForegroundColor Red
