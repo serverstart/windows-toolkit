@@ -523,10 +523,10 @@ Write-Host "`t_________________________________________________________`n `n "
 
 #Log Header
 if ($Uninstall) {
-    Write-Host "###   $(Get-Date -Format (Get-culture).DateTimeFormat.ShortDatePattern) - NEW UNINSTALL REQUEST   ###`n " "Magenta"
+    Write-Host "###   $(Get-Date -Format (Get-culture).DateTimeFormat.ShortDatePattern) - NEW UNINSTALL REQUEST   ###`n " -ForegroundColor "Magenta"
 }
 else {
-    Write-Host "###   $(Get-Date -Format (Get-culture).DateTimeFormat.ShortDatePattern) - NEW INSTALL REQUEST   ###`n " "Magenta"
+    Write-Host "###   $(Get-Date -Format (Get-culture).DateTimeFormat.ShortDatePattern) - NEW INSTALL REQUEST   ###`n " -ForegroundColor "Magenta"
 }
 
 #Get Winget command
@@ -573,5 +573,5 @@ if ($Winget) {
     }
 }
 
-Write-Host "###   END REQUEST   ###`n" "Magenta"
+Write-Host "###   END REQUEST   ###`n" -ForegroundColor "Magenta"
 Start-Sleep 3
