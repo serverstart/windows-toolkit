@@ -108,7 +108,7 @@ function Add-ScopeMachine {
 
 function Install-Prerequisites {
 
-    Write-Host "Checking prerequisites..." "Cyan"
+    Write-Host "Checking prerequisites..." -ForegroundColor "Cyan"
 
     #Check if Visual C++ 2019 or 2022 installed
     $Visual2019 = "Microsoft Visual C++ 2015-2019 Redistributable*"
@@ -118,7 +118,7 @@ function Install-Prerequisites {
     #If not installed, download and install
     if (!($path)) {
 
-        Write-Host "Microsoft Visual C++ 2015-2022 is not installed." "Red"
+        Write-Host "Microsoft Visual C++ 2015-2022 is not installed." -ForegroundColor "Red"
 
         try {
             #Get proc architecture
@@ -141,17 +141,17 @@ function Install-Prerequisites {
             Start-Process -FilePath $Installer -Args "/passive /norestart" -Wait
             Start-Sleep 3
             Remove-Item $Installer -ErrorAction Ignore
-            Write-Host "-> MS Visual C++ 2015-2022 installed successfully." "Green"
+            Write-Host "-> MS Visual C++ 2015-2022 installed successfully." -ForegroundColor "Green"
         }
         catch {
-            Write-Host "-> MS Visual C++ 2015-2022 installation failed." "Red"
+            Write-Host "-> MS Visual C++ 2015-2022 installation failed." -ForegroundColor "Red"
         }
 
     }
 
     #Check if Microsoft.VCLibs.140.00.UWPDesktop is installed
     if (!(Get-AppxPackage -Name 'Microsoft.VCLibs.140.00.UWPDesktop' -AllUsers)) {
-        Write-Host "Microsoft.VCLibs.140.00.UWPDesktop is not installed" "Red"
+        Write-Host "Microsoft.VCLibs.140.00.UWPDesktop is not installed" -ForegroundColor "Red"
         $VCLibsUrl = "https://aka.ms/Microsoft.VCLibs.x64.14.00.Desktop.appx"
         $VCLibsFile = "$env:TEMP\Microsoft.VCLibs.x64.14.00.Desktop.appx"
         Write-Host "-> Downloading $VCLibsUrl..."
@@ -159,10 +159,10 @@ function Install-Prerequisites {
         try {
             Write-Host "-> Installing Microsoft.VCLibs.140.00.UWPDesktop..."
             Add-AppxProvisionedPackage -Online -PackagePath $VCLibsFile -SkipLicense | Out-Null
-            Write-Host "-> Microsoft.VCLibs.140.00.UWPDesktop installed successfully." "Green"
+            Write-Host "-> Microsoft.VCLibs.140.00.UWPDesktop installed successfully." -ForegroundColor "Green"
         }
         catch {
-            Write-Host "-> Failed to intall Microsoft.VCLibs.140.00.UWPDesktop..." "Red"
+            Write-Host "-> Failed to intall Microsoft.VCLibs.140.00.UWPDesktop..." -ForegroundColor "Red"
         }
         Remove-Item -Path $VCLibsFile -Force
     }
@@ -183,7 +183,7 @@ function Install-Prerequisites {
         Write-Host "Installed Winget version: $WingetInstalledVersionCmd"
     }
     catch {
-        Write-Host "WinGet is not installed" "Red"
+        Write-Host "WinGet is not installed" -ForegroundColor "Red"
     }
 
     #Check if the available WinGet is newer than the installed
@@ -196,15 +196,15 @@ function Install-Prerequisites {
         try {
             Write-Host "-> Installing Winget v$WinGetAvailableVersion"
             Add-AppxProvisionedPackage -Online -PackagePath $WingetInstaller -SkipLicense | Out-Null
-            Write-Host "-> Winget installed." "Green"
+            Write-Host "-> Winget installed." -ForegroundColor "Green"
         }
         catch {
-            Write-Host "-> Failed to install Winget!" "Red"
+            Write-Host "-> Failed to install Winget!" -ForegroundColor "Red"
         }
         Remove-Item -Path $WingetInstaller -Force
     }
 
-    Write-Host "Checking prerequisites ended.`n" "Cyan"
+    Write-Host "Checking prerequisites ended.`n" -ForegroundColor "Cyan"
 
 }
 
@@ -229,11 +229,11 @@ function Confirm-Exist ($AppID) {
 
     #Return if AppID exists
     if ($WingetApp -match [regex]::Escape($AppID)) {
-        Write-Host "-> $AppID exists on Winget Repository." "Cyan"
+        Write-Host "-> $AppID exists on Winget Repository." -ForegroundColor "Cyan"
         return $true
     }
     else {
-        Write-Host "-> $AppID does not exist on Winget Repository! Check spelling." "Red"
+        Write-Host "-> $AppID does not exist on Winget Repository! Check spelling." -ForegroundColor "Red"
         return $false
     }
 }
@@ -321,7 +321,7 @@ function Install-App ($AppID, $AppArgs) {
         #Check if install is ok
         $IsInstalled = Confirm-Install $AppID
         if ($IsInstalled) {
-            Write-Host "-> $AppID successfully installed." "Green"
+            Write-Host "-> $AppID successfully installed." -ForegroundColor "Green"
 
             if ($ModsInstalledOnce) {
                 Write-Host "-> Modifications for $AppID after install (one time) are being applied..." "Yellow"
@@ -343,11 +343,11 @@ function Install-App ($AppID, $AppArgs) {
             }
         }
         else {
-            Write-Host "-> $AppID installation failed!" "Red"
+            Write-Host "-> $AppID installation failed!" -ForegroundColor "Red"
         }
     }
     else {
-        Write-Host "-> $AppID is already installed." "Cyan"
+        Write-Host "-> $AppID is already installed." -ForegroundColor "Cyan"
     }
 }
 
@@ -378,7 +378,7 @@ function Uninstall-App ($AppID, $AppArgs) {
         #Check if uninstall is ok
         $IsInstalled = Confirm-Install $AppID
         if (!($IsInstalled)) {
-            Write-Host "-> $AppID successfully uninstalled." "Green"
+            Write-Host "-> $AppID successfully uninstalled." -ForegroundColor "Green"
             if ($ModsUninstalled) {
                 Write-Host "-> Modifications for $AppID after uninstall are being applied..." "Yellow"
                 & "$ModsUninstalled"
@@ -395,11 +395,11 @@ function Uninstall-App ($AppID, $AppArgs) {
             }
         }
         else {
-            Write-Host "-> $AppID uninstall failed!" "Red"
+            Write-Host "-> $AppID uninstall failed!" -ForegroundColor "Red"
         }
     }
     else {
-        Write-Host "-> $AppID is not installed." "Cyan"
+        Write-Host "-> $AppID is not installed." -ForegroundColor "Cyan"
     }
 }
 
