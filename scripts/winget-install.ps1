@@ -508,26 +508,26 @@ else {
 }
 
 #Header (not logged)
-Write-Host "`n"
-Write-Host "`t        888       888 d8b  .d8888b.           d8b" -ForegroundColor Cyan
-Write-Host "`t        888   o   888 Y8P d88P  Y88b          Y8P" -ForegroundColor Cyan
-Write-Host "`t        888  d8b  888     888    888" -ForegroundColor Cyan
-Write-Host "`t        888 d888b 888 888 888        888  888 888" -ForegroundColor Cyan
-Write-Host "`t        888d88888b888 888 888  88888 888  888 888" -ForegroundColor Cyan
-Write-Host "`t        88888P Y88888 888 888    888 888  888 888" -ForegroundColor Magenta
-Write-Host "`t        8888P   Y8888 888 Y88b  d88P Y88b 888 888" -ForegroundColor Cyan
-Write-Host "`t        888P     Y888 888  `"Y8888P88  `"Y88888 888`n" -ForegroundColor Cyan
-Write-Host "`t       https://github.com/Romanitho/Winget-Install" -ForegroundColor Magenta
-Write-Host "`t     https://github.com/Romanitho/Winget-Install-GUI`n" -ForegroundColor Cyan
-Write-Host "`t_________________________________________________________`n `n "
+#Write-Host "`n"
+#Write-Host "`t        888       888 d8b  .d8888b.           d8b" -ForegroundColor Cyan
+#Write-Host "`t        888   o   888 Y8P d88P  Y88b          Y8P" -ForegroundColor Cyan
+#Write-Host "`t        888  d8b  888     888    888" -ForegroundColor Cyan
+#Write-Host "`t        888 d888b 888 888 888        888  888 888" -ForegroundColor Cyan
+#Write-Host "`t        888d88888b888 888 888  88888 888  888 888" -ForegroundColor Cyan
+#Write-Host "`t        88888P Y88888 888 888    888 888  888 888" -ForegroundColor Magenta
+#Write-Host "`t        8888P   Y8888 888 Y88b  d88P Y88b 888 888" -ForegroundColor Cyan
+#Write-Host "`t        888P     Y888 888  `"Y8888P88  `"Y88888 888`n" -ForegroundColor Cyan
+#Write-Host "`t       https://github.com/Romanitho/Winget-Install" -ForegroundColor Magenta
+#Write-Host "`t     https://github.com/Romanitho/Winget-Install-GUI`n" -ForegroundColor Cyan
+#Write-Host "`t_________________________________________________________`n `n "
 
 #Log Header
-if ($Uninstall) {
-    Write-Host "###   $(Get-Date -Format (Get-culture).DateTimeFormat.ShortDatePattern) - NEW UNINSTALL REQUEST   ###`n " -ForegroundColor "Magenta"
-}
-else {
-    Write-Host "###   $(Get-Date -Format (Get-culture).DateTimeFormat.ShortDatePattern) - NEW INSTALL REQUEST   ###`n " -ForegroundColor "Magenta"
-}
+#if ($Uninstall) {
+#    Write-Host "###   $(Get-Date -Format (Get-culture).DateTimeFormat.ShortDatePattern) - NEW UNINSTALL REQUEST   ###`n " -ForegroundColor "Magenta"
+#}
+#else {
+#    Write-Host "###   $(Get-Date -Format (Get-culture).DateTimeFormat.ShortDatePattern) - NEW INSTALL REQUEST   ###`n " -ForegroundColor "Magenta"
+#}
 
 #Get Winget command
 $Script:Winget = Get-WingetCmd
@@ -573,5 +573,5 @@ if ($Winget) {
     }
 }
 
-Write-Host "###   END REQUEST   ###`n" -ForegroundColor "Magenta"
-Start-Sleep 3
+#Write-Host "###   END REQUEST   ###`n" -ForegroundColor "Magenta"
+#Start-Sleep 3

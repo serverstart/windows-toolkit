@@ -56,4 +56,6 @@ function Install-WinGetPackage {
         Write-Log "Fehler bei der Ausführung von Winget-AutoUpdate!"
         exit 1
     }
+
+    Complete-Task
 }
