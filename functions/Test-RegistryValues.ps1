@@ -55,18 +55,18 @@ function Test-RegistryValues {
  
         # Status-String zurückgeben
         if ($missingKeys -gt 0) {
-            Write-Log "Result: CONFIG_DRIFTED" -Warning
+            Write-Log "Result: CHECK_FAILED" -Warning
         }
         elseif ($wrongValues -gt 0) {
-            Write-Log "Result: CONFIG_DRIFTED" -Warning
+            Write-Log "Result: CHECK_FAILED" -Warning
         }
         else {
-            Write-Log "Result: CONFIG_CORRECT" -Success
+            Write-Log "Result: CHECK_PASSED" -Success
         }
         
     } catch {
         Write-Log "Error checking registry values: $_" -Danger
-        Write-Log "Result: ERROR" -Danger
+        Write-Log "Result: CHECK_ERROR" -Danger
     }
 
     Complete-Task
