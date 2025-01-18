@@ -99,6 +99,9 @@ try {
         }
     }
 
+    # Setzt die PowerShell Execution Policy auf RemoteSigned (erlaubt lokale unsigned Scripts + remote signierte Scripts).
+    Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Force | Out-Null
+
     # Load all library functions and scripts
     $functionFiles = if (Test-Path $functionsPath) { Get-ChildItem -Path $functionsPath -Filter "*.ps1" -Recurse } else { @() }
     $totalFunctions = ($functionFiles).Count
@@ -106,8 +109,6 @@ try {
     $functionFiles | ForEach-Object { . $_.FullName }
     Write-Host "[Bootstrap] serverstart PowerShell Library successfully initialized (loaded $totalFunctions function files)." -ForegroundColor Green
     
-    # Setzt die PowerShell Execution Policy auf RemoteSigned (erlaubt lokale unsigned Scripts + remote signierte Scripts).
-    Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Force | Out-Null
 } catch {
     Write-Host "[Bootstrap] Critical error loading library: $_" -ForegroundColor Red
     throw
