@@ -17,7 +17,7 @@
 
 param([string]$ImageFile = "", [string]$Style = "Span")
 
-function SetWallPaper {
+function Set-Wallpaper {
 	param([string]$Image, [ValidateSet('Fill', 'Fit', 'Stretch', 'Tile', 'Center', 'Span')][string]$Style)
  
 	$WallpaperStyle = switch($Style) {
