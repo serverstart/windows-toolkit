@@ -7,7 +7,7 @@ $targetPath = "$env:ProgramData\serverstart"
 $updateFile = Join-Path $targetPath "update.json"
 $functionsPath = Join-Path $targetPath "powershell\functions"
 
-Write-Host "[Bootstrap] Initializing serverstart PowerShell Library…" -ForegroundColor Cyan
+Write-Host "[Bootstrap] Initializing serverstart Windows-Toolkit" -ForegroundColor Cyan
 
 # Ensure our base structure exists
 if (-not (Test-Path $targetPath)) {
@@ -63,7 +63,7 @@ try {
                 Write-Host "[Bootstrap] Downloading new version..." -ForegroundColor Yellow
                 
                 try {
-                    Invoke-WebRequest "https://github.com/serverstart/powershell/archive/refs/heads/main.zip" -OutFile "$env:TEMP\ps.zip" -UseBasicParsing
+                    Invoke-WebRequest "https://github.com/serverstart/windows-toolkit/archive/refs/heads/main.zip" -OutFile "$env:TEMP\ps.zip" -UseBasicParsing
                 } catch {
                     throw "Failed to download update package: $($_.Exception.Message)"
                 }
@@ -71,8 +71,8 @@ try {
                 try {
                     Get-ChildItem -Path $targetPath -Exclude "update.json" | Remove-Item -Recurse -Force
                     Expand-Archive "$env:TEMP\ps.zip" -DestinationPath "$env:TEMP" -Force
-                    Copy-Item "$env:TEMP\powershell-main\*" $targetPath -Recurse -Force
-                    Remove-Item "$env:TEMP\ps.zip","$env:TEMP\powershell-main" -Recurse -Force
+                    Copy-Item "$env:TEMP\windows-toolkit\*" $targetPath -Recurse -Force
+                    Remove-Item "$env:TEMP\ps.zip","$env:TEMP\windows-toolkit" -Recurse -Force
                 } catch {
                     throw "Failed to install update: $($_.Exception.Message)"
                 }
@@ -107,7 +107,7 @@ try {
     $totalFunctions = ($functionFiles).Count
 
     $functionFiles | ForEach-Object { . $_.FullName }
-    Write-Host "[Bootstrap] serverstart PowerShell Library successfully initialized (loaded $totalFunctions function files)." -ForegroundColor Green
+    Write-Host "[Bootstrap] serverstart Windows-Toolkit successfully initialized (loaded $totalFunctions function files)." -ForegroundColor Green
     
 } catch {
     Write-Host "[Bootstrap] Critical error loading library: $_" -ForegroundColor Red
