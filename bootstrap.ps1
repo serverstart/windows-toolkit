@@ -62,17 +62,21 @@ try {
             if ($needsUpdate) {
                 Write-Host "[Bootstrap] Downloading new version..." -ForegroundColor Yellow
                 
+                $downloadPath = "$env:TEMP\windows-toolkit-download.zip"
+                Write-Host "[Bootstrap] Download to $downloadPath"
+
                 try {
-                    Invoke-WebRequest "https://github.com/serverstart/windows-toolkit/archive/refs/heads/main.zip" -OutFile "$env:TEMP\ps.zip" -UseBasicParsing
+                    Remove-Item $downloadPath -ErrorAction SilentlyContinue 
+                    Invoke-WebRequest "https://github.com/serverstart/windows-toolkit/archive/refs/heads/main.zip" -OutFile $downloadPath -UseBasicParsing
                 } catch {
                     throw "Failed to download update package: $($_.Exception.Message)"
                 }
 
                 try {
                     Get-ChildItem -Path $targetPath -Exclude "update.json" | Remove-Item -Recurse -Force
-                    Expand-Archive "$env:TEMP\ps.zip" -DestinationPath "$env:TEMP" -Force
-                    Copy-Item "$env:TEMP\windows-toolkit\*" $targetPath -Recurse -Force
-                    Remove-Item "$env:TEMP\ps.zip","$env:TEMP\windows-toolkit" -Recurse -Force
+                    Expand-Archive $downloadPath -DestinationPath "$env:TEMP" -Force
+                    Copy-Item "$env:TEMP\windows-toolkit-main\*" $targetPath -Recurse -Force
+                    Remove-Item $downloadPath,"$env:TEMP\windows-toolkit-main" -Recurse -Force
                 } catch {
                     throw "Failed to install update: $($_.Exception.Message)"
                 }
