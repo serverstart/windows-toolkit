@@ -40,7 +40,7 @@ try {
         Write-Host "[Bootstrap] Checking for available updates..."
         
         try {
-            $response = Invoke-RestMethod -Uri "https://api.github.com/repos/serverstart/powershell/commits/main" -UseBasicParsing -TimeoutSec 10
+            $response = Invoke-RestMethod -Uri "https://api.github.com/repos/serverstart/windows-toolkit/commits/main" -UseBasicParsing -TimeoutSec 10
             $newHash = $response.sha
             Write-Host "[Bootstrap] Latest available version: $newHash"
             
