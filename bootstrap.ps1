@@ -3,9 +3,9 @@
 # - Local Version state is tracked via update.json containing commit hash and last check date
 # - Offline capability: Falls back to local version if GitHub is unreachable
 # - Minimal disk operations: Only updates files when actual changes are detected via hash comparison
-$targetPath = "$env:ProgramData\serverstart\powershell"
+$targetPath = "$env:ProgramData\serverstart"
 $updateFile = Join-Path $targetPath "update.json"
-$functionsPath = Join-Path $targetPath "functions"
+$functionsPath = Join-Path $targetPath "powershell\functions"
 
 Write-Host "[Bootstrap] Initializing serverstart PowerShell Library…" -ForegroundColor Cyan
 
