@@ -8,26 +8,26 @@ function Invoke-TemporaryFileDownload {
     )
    
     try {
-        # Wenn kein Filename angegeben, lade die Datei und hole den echten Namen
-        if (-not $Filename) {
-            $response = Invoke-WebRequest -Uri $Url -UseBasicParsing -OutFile $null
-            $realUrl = $response.BaseResponse.ResponseUri.AbsoluteUri
-            $Filename = [System.IO.Path]::GetFileName($realUrl)
+        Write-Log "Downloading file from: $Url"
 
-            # Wenn immer noch kein Filename, generiere einen
+        $request = [System.Net.WebRequest]::Create($Url)
+        $response = $request.GetResponse()
+        $realUrl = $response.ResponseUri.AbsoluteUri
+        $response.Dispose()
+
+        if (-not $Filename) {
+            $Filename = [System.IO.Path]::GetFileName($realUrl)
             if ([string]::IsNullOrEmpty($Filename)) {
                 $Filename = [System.IO.Path]::GetRandomFileName()
             }
         }
 
         $fullPath = Join-Path $env:TEMP $Filename
-        Write-Log "Downloading file from: $Url"
+        Start-BitsTransfer -Source $Url -Destination $fullPath
         
-        Invoke-WebRequest -Uri $Url -OutFile $fullPath
         Write-Log "Download successful: $fullPath" -Success
-        
-        return $fullPath
 
+        return $fullPath
     } catch {
         Write-Log "Failed to download file: $_" -Danger
         throw
