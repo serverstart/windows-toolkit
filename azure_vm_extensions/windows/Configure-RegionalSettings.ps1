@@ -1,6 +1,3 @@
-# Load serverstart Windows-Toolkit
-Invoke-Expression (Invoke-WebRequest "https://raw.githubusercontent.com/serverstart/windows-toolkit/main/bootstrap.ps1" -UseBasicParsing).Content
-
 $Language = "de-DE"
 $TimeZone = "W. Europe Standard Time"
 
