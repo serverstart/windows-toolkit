@@ -39,17 +39,18 @@ $action = New-ScheduledTaskAction `
 # Trigger erstellen (Bei Benutzeranmeldung)
 $trigger = New-ScheduledTaskTrigger -AtLogon
 
-# Hauptbenutzer-Einstellungen
-$principal = New-ScheduledTaskPrincipal `
-    -UserId "SYSTEM" `
-    -RunLevel Highest
+# Erstellen der Principal-Einstellungen (Ausführung im Benutzerkontext)
+# Verwendung der SID für die Benutzergruppe statt des lokalisierten Namens
+$Principal = New-ScheduledTaskPrincipal `
+    -GroupId "S-1-5-32-545" `
+    -RunLevel Limited
 
 # Task-Einstellungen
-$settings = New-ScheduledTaskSettingsSet `
+$Settings = New-ScheduledTaskSettingsSet `
     -AllowStartIfOnBatteries `
     -DontStopIfGoingOnBatteries `
-    -ExecutionTimeLimit (New-TimeSpan -Hours 1) `
-    -MultipleInstances IgnoreNew
+    -MultipleInstances IgnoreNew `
+    -ExecutionTimeLimit (New-TimeSpan -Minutes 30)
 
 try {
     # Überprüfen, ob die Aufgabe bereits existiert
