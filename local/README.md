@@ -1,0 +1,1 @@
+Der Inhalt dieses Ordners wird nicht im Git getrackt und dient zur Ablage lokaler Dateien.
