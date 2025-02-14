@@ -41,9 +41,8 @@ $trigger = New-ScheduledTaskTrigger -AtLogon
 
 # Hauptbenutzer-Einstellungen
 $principal = New-ScheduledTaskPrincipal `
-    -LogonType Interactive `
-    -UserId "NT AUTHORITY\INTERACTIVE" `
-    -RunLevel Limited
+    -UserId "SYSTEM" `
+    -RunLevel Highest
 
 # Task-Einstellungen
 $settings = New-ScheduledTaskSettingsSet `
