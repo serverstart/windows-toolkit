@@ -1,3 +1,5 @@
 update.json
 local/*
 !local/README.md
+logs/*
+!logs/README.md

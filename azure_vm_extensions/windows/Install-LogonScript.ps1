@@ -23,9 +23,30 @@ if (-not (Test-Path $scriptFolder)) {
 
 # Base64-String dekodieren und in Datei schreiben
 try {
+    # Zuerst: Wenn die Datei existiert, explizit löschen
+    if (Test-Path $scriptPath) {
+        Remove-Item -Path $scriptPath -Force
+        Write-Output "Alte Datei wurde gelöscht."
+    }
+    
+    # Kurz warten um sicherzustellen, dass das Dateisystem die Löschung abgeschlossen hat
+    Start-Sleep -Milliseconds 100
+    
+    # Neue Datei schreiben
     $decodedContent = [System.Convert]::FromBase64String($ScriptContent)
     [System.IO.File]::WriteAllBytes($scriptPath, $decodedContent)
-    Write-Output "Skript wurde erfolgreich nach $scriptPath geschrieben."
+    
+    # Überprüfen, ob der Schreibvorgang erfolgreich war
+    if (Test-Path $scriptPath) {
+        $newContent = Get-Content -Path $scriptPath -Raw
+        if ($newContent) {
+            Write-Output "Skript wurde erfolgreich nach $scriptPath geschrieben und verifiziert."
+        } else {
+            throw "Datei wurde erstellt, scheint aber leer zu sein."
+        }
+    } else {
+        throw "Datei wurde nicht erfolgreich erstellt."
+    }
 } catch {
     Write-Error "Fehler beim Dekodieren oder Schreiben des Skripts: $_"
     exit 1
