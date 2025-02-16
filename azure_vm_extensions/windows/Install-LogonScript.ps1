@@ -8,6 +8,7 @@ $taskName = "serverstart Logon-Script"
 
 # Zielpfad für das Skript
 $scriptFolder = "C:\ProgramData\serverstart\local"
+$vbsPath = Join-Path $scriptFolder "logon.vbs"
 $scriptPath = Join-Path $scriptFolder "logon.ps1"
 
 # Erstelle Verzeichnis falls es nicht existiert
@@ -19,6 +20,46 @@ if (-not (Test-Path $scriptFolder)) {
         Write-Error "Fehler beim Erstellen des Verzeichnisses: $_"
         exit 1
     }
+}
+
+
+# VBS-Skript-Inhalt erstellen
+$vbsContent = @"
+Dim shell, command
+command = "powershell.exe -ExecutionPolicy Bypass -File " & Chr(34) & "$scriptPath" & Chr(34)
+Set shell = CreateObject("WScript.Shell")
+shell.Run command, 0, false
+Set shell = Nothing
+"@
+
+# VBS-Datei erstellen/überschreiben
+try {
+    # Wenn die VBS-Datei existiert, explizit löschen
+    if (Test-Path $vbsPath) {
+        Remove-Item -Path $vbsPath -Force
+        Write-Output "Alte VBS-Datei wurde gelöscht."
+    }
+    
+    # Kurz warten um sicherzustellen, dass das Dateisystem die Löschung abgeschlossen hat
+    Start-Sleep -Milliseconds 100
+    
+    # Neue VBS-Datei schreiben
+    Set-Content -Path $vbsPath -Value $vbsContent -Encoding UTF8
+    
+    # Überprüfen, ob der Schreibvorgang erfolgreich war
+    if (Test-Path $vbsPath) {
+        $newVbsContent = Get-Content -Path $vbsPath -Raw
+        if ($newVbsContent) {
+            Write-Output "VBS-Skript wurde erfolgreich nach $vbsPath geschrieben und verifiziert."
+        } else {
+            throw "VBS-Datei wurde erstellt, scheint aber leer zu sein."
+        }
+    } else {
+        throw "VBS-Datei wurde nicht erfolgreich erstellt."
+    }
+} catch {
+    Write-Error "Fehler beim Erstellen der VBS-Datei: $_"
+    exit 1
 }
 
 # Base64-String dekodieren und in Datei schreiben
@@ -54,8 +95,8 @@ try {
 
 # Aktion erstellen
 $action = New-ScheduledTaskAction `
-    -Execute "powershell.exe" `
-    -Argument "-NoProfile -ExecutionPolicy Bypass -File `"$scriptPath`""
+    -Execute "cscript.exe" `
+    -Argument "`"$vbsPath`""
 
 # Trigger erstellen (Bei Benutzeranmeldung)
 $trigger = New-ScheduledTaskTrigger -AtLogon
