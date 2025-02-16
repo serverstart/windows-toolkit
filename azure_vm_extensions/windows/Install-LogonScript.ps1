@@ -24,13 +24,17 @@ if (-not (Test-Path $scriptFolder)) {
 
 
 # VBS-Skript-Inhalt erstellen
-$vbsContent = @"
+$vbsContent = @'
 Dim shell, command
-command = "powershell.exe -ExecutionPolicy Bypass -File " & Chr(34) & "$scriptPath" & Chr(34)
+command = "powershell.exe -ExecutionPolicy Bypass -File ""{0}"""
 Set shell = CreateObject("WScript.Shell")
 shell.Run command, 0, false
 Set shell = Nothing
-"@
+'@ -f $scriptPath
+
+# Zur Überprüfung ausgeben, was tatsächlich im VBS-Skript steht
+Write-Output "VBS-Inhalt wird sein:"
+Write-Output $vbsContent
 
 # VBS-Datei erstellen/überschreiben
 try {
@@ -40,20 +44,12 @@ try {
         Write-Output "Alte VBS-Datei wurde gelöscht."
     }
     
-    # Kurz warten um sicherzustellen, dass das Dateisystem die Löschung abgeschlossen hat
-    Start-Sleep -Milliseconds 100
+    # Neue VBS-Datei schreiben (wichtig: ASCII Encoding verwenden)
+    [System.IO.File]::WriteAllText($vbsPath, $vbsContent, [System.Text.Encoding]::ASCII)
     
-    # Neue VBS-Datei schreiben
-    Set-Content -Path $vbsPath -Value $vbsContent -Encoding UTF8
-    
-    # Überprüfen, ob der Schreibvorgang erfolgreich war
     if (Test-Path $vbsPath) {
-        $newVbsContent = Get-Content -Path $vbsPath -Raw
-        if ($newVbsContent) {
-            Write-Output "VBS-Skript wurde erfolgreich nach $vbsPath geschrieben und verifiziert."
-        } else {
-            throw "VBS-Datei wurde erstellt, scheint aber leer zu sein."
-        }
+        Get-Content $vbsPath | Write-Output  # Zeige den tatsächlichen Inhalt der Datei
+        Write-Output "VBS-Skript wurde erfolgreich erstellt."
     } else {
         throw "VBS-Datei wurde nicht erfolgreich erstellt."
     }
