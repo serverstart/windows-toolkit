@@ -5,7 +5,6 @@ param (
 # Prüfen, ob ein Hostname-String übergeben wurde
 if (-not $hostnamesToAdd) {
     Write-Host "Fehler: Bitte mindestens einen Hostnamen als Semikolon-getrennten String übergeben!"
-    Write-Host "Beispiel: .\Add-BackConnectionHostName.ps1 -hostnamesToAdd 'sfirm.private.remote-arbeitsplatz.net;fileshare.private.remote-arbeitsplatz.net'"
     exit 1
 }
 
@@ -46,6 +45,3 @@ if ($addedHostnames.Count -gt 0) {
 else {
     Write-Host "Alle angegebenen Hostnamen sind bereits in BackConnectionHostNames eingetragen. Keine Änderungen erforderlich."
 }
-
-# Optional: Rechnerneustart für die Änderung (auskommentieren, falls nicht gewünscht)
-# Restart-Computer -Force
