@@ -2,46 +2,47 @@ param (
     [string]$hostnamesToAdd
 )
 
-# Prüfen, ob ein Hostname-String übergeben wurde
+# Sicherstellen, dass das Argument vorhanden ist
 if (-not $hostnamesToAdd) {
-    Write-Host "Fehler: Bitte mindestens einen Hostnamen als Semikolon-getrennten String übergeben!"
+    Write-Host "ERROR: Please provide at least one hostname as a semicolon-separated string."
+    Write-Host "Example: powershell.exe -ExecutionPolicy Bypass -File Add-BackConnectionHostName.ps1 -hostnamesToAdd 'sfirm.private.remote-arbeitsplatz.net;fileshare.private.remote-arbeitsplatz.net'"
     exit 1
 }
 
-# Hostnamen in eine Liste umwandeln
-$hostnamesToAdd = $hostnamesToAdd -split ";"
+# Split the string into an array and remove extra spaces
+$hostnamesArray = $hostnamesToAdd -split ";" | ForEach-Object { $_.Trim() }
 
-# Pfad zum Registry-Schlüssel
+# Define registry path and value name
 $regPath = "HKLM:\SYSTEM\CurrentControlSet\Control\Lsa\MSV1_0"
 $regName = "BackConnectionHostNames"
 
-# Prüfen, ob der Schlüssel existiert
+# Check if the registry path exists
 if (!(Test-Path $regPath)) {
-    Write-Host "Der Registry-Pfad existiert nicht. Erstelle ihn..."
+    Write-Host "Creating missing registry path..."
     New-Item -Path $regPath -Force | Out-Null
 }
 
-# Bestehende Werte abrufen
+# Get existing values
 $currentValues = @()
 if (Get-ItemProperty -Path $regPath -Name $regName -ErrorAction SilentlyContinue) {
     $currentValues = (Get-ItemProperty -Path $regPath -Name $regName).$regName -split "`n"
 }
 
-# Neue Hostnamen hinzufügen, falls sie noch nicht existieren
+# Add new hostnames if not already present
 $addedHostnames = @()
-foreach ($hostname in $hostnamesToAdd) {
-    $hostname = $hostname.Trim()  # Entferne Leerzeichen um den Hostnamen
+foreach ($hostname in $hostnamesArray) {
     if ($hostname -and $hostname -notin $currentValues) {
         $currentValues += $hostname
         $addedHostnames += $hostname
     }
 }
 
-# Falls Änderungen vorgenommen wurden, die Registry aktualisieren
+# Update registry if new hostnames were added
 if ($addedHostnames.Count -gt 0) {
     Set-ItemProperty -Path $regPath -Name $regName -Value $currentValues -Type MultiString
-    Write-Host "Die folgenden Hostnamen wurden zu BackConnectionHostNames hinzugefügt:`n$($addedHostnames -join "`n")"
+    Write-Host "The following hostnames have been added:"
+    Write-Host ($addedHostnames -join "`n")
 }
 else {
-    Write-Host "Alle angegebenen Hostnamen sind bereits in BackConnectionHostNames eingetragen. Keine Änderungen erforderlich."
+    Write-Host "No changes needed. All hostnames are already present."
 }
