@@ -12,7 +12,7 @@ Add-Type -AssemblyName System.Windows.Forms
 Add-Type -AssemblyName System.Drawing
 
 # Konfiguration
-$phpEndpoint = "https://luna.server-start.de/survey/remote-arbeitsplatz"
+$phpEndpoint = "https://luna.server-start.de/api/survey/remote-arbeitsplatz"
 
 # Formular erstellen
 $form = New-Object System.Windows.Forms.Form
@@ -35,7 +35,7 @@ $form.Controls.Add($labelQuestion)
 
 # Beschreibungstext
 $labelDescription = New-Object System.Windows.Forms.Label
-$labelDescription.Text = "Diese Umfrage hilft uns, die Server-Performance kontinuierlich zu überwachen und zu verbessern. Ihr Feedback ist wichtig für uns! Bitte klicken Sie auf die entsprechende Bewertung."
+$labelDescription.Text = "Diese Umfrage hilft uns, die Server-Performance kontinuierlich zu ueberwachen und zu verbessern. Ihr Feedback ist wichtig! Bitte klicken Sie auf die entsprechende Bewertung."
 $labelDescription.Location = New-Object System.Drawing.Point(30, 65)
 $labelDescription.Size = New-Object System.Drawing.Size(520, 50)
 $labelDescription.Font = New-Object System.Drawing.Font("Segoe UI", 9)
@@ -57,6 +57,12 @@ function Send-Feedback {
                 $ctrl.Enabled = $false
             }
         }
+
+        # Header
+        $headers = @{
+            "Accept" = "application/json"
+            "Content-Type" = "application/json"
+        }
         
         # POST-Daten vorbereiten
         $body = @{
@@ -70,9 +76,11 @@ function Send-Feedback {
         if (-not [string]::IsNullOrWhiteSpace($Payload)) {
             $body.payload = $Payload
         }
+
+        $bodyAsJson = $body | ConvertTo-Json
         
         # HTTP-Request senden
-        $response = Invoke-WebRequest -Uri $phpEndpoint -Method POST -Body $body -TimeoutSec 5 -UseBasicParsing
+        $response = Invoke-WebRequest -Uri $phpEndpoint -Method POST -Body $bodyAsJson -Headers $headers -TimeoutSec 5 -UseBasicParsing
         
         if ($response.StatusCode -eq 200) {
             [System.Windows.Forms.MessageBox]::Show(
