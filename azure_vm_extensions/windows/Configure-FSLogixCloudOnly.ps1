@@ -31,8 +31,11 @@ if (-not [string]::IsNullOrWhiteSpace($AccessKey)) {
 # CLOUD ONLY CONFIGURATION #
 ############################
 
-reg add HKLM\SYSTEM\CurrentControlSet\Control\Lsa\Kerberos\Parameters /v CloudKerberosTicketRetrievalEnabled /t REG_DWORD /d 1
-reg add HKLM\Software\Policies\Microsoft\AzureADAccount /v LoadCredKeyFromProfile /t REG_DWORD /d 1
+New-Item -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Lsa\Kerberos\Parameters" -Force | Out-Null
+New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Lsa\Kerberos\Parameters" -Name "CloudKerberosTicketRetrievalEnabled" -PropertyType DWord -Value 1 -Force
+
+New-Item -Path "HKLM:\Software\Policies\Microsoft\AzureADAccount" -Force | Out-Null
+New-ItemProperty -Path "HKLM:\Software\Policies\Microsoft\AzureADAccount" -Name "LoadCredKeyFromProfile" -PropertyType DWord -Value 1 -Force
 
 ##################################
 #    Configure FSLogix Profile   #
