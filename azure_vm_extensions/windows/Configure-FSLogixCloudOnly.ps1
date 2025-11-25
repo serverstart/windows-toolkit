@@ -4,7 +4,7 @@ param
 ( 
     [Parameter(ValuefromPipeline=$true,Mandatory=$true)] [string]$StorageAccountName,
     [Parameter(ValuefromPipeline=$true,Mandatory=$true)] [string]$ProfileShareName,
-    [Parameter(ValuefromPipeline=$true,Mandatory=$true)] [string]$AccessKey
+    [Parameter(ValuefromPipeline=$true,Mandatory=$false)] [string]$AccessKey = $null
 )
 
 ###################
@@ -17,11 +17,15 @@ $ProfilePath="\\$($FileServer)\$($ProfileShareName)"
 # CMDKEY #
 ##########
 
-# Create a user string for the cmdkey command
-$user="localhost\$($StorageAccountName)"
-
-# Store credentials to access the storage account
-cmdkey.exe /add:$FileServer /user:$($user) /pass:$($AccessKey)
+if (-not [string]::IsNullOrWhiteSpace($AccessKey)) {
+    # Create a user string for the cmdkey command
+    $user="localhost\$($StorageAccountName)"
+    
+    # Store credentials to access the storage account
+    cmdkey.exe /add:$FileServer /user:$($user) /pass:$($AccessKey)
+} else {
+    Write-Host "serverstart - Configure FSLogix : No AccessKey provided, skipping cmdkey credential setup"
+}
 
 ##################################
 #    Configure FSLogix Profile   #
