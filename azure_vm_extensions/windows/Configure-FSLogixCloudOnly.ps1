@@ -27,6 +27,13 @@ if (-not [string]::IsNullOrWhiteSpace($AccessKey)) {
     Write-Host "serverstart - Configure FSLogix : No AccessKey provided, skipping cmdkey credential setup"
 }
 
+############################
+# CLOUD ONLY CONFIGURATION #
+############################
+
+reg add HKLM\SYSTEM\CurrentControlSet\Control\Lsa\Kerberos\Parameters /v CloudKerberosTicketRetrievalEnabled /t REG_DWORD /d 1
+reg add HKLM\Software\Policies\Microsoft\AzureADAccount /v LoadCredKeyFromProfile /t REG_DWORD /d 1
+
 ##################################
 #    Configure FSLogix Profile   #
 ##################################
