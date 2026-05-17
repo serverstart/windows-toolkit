@@ -3,7 +3,7 @@
 param 
 ( 
     [Parameter(ValuefromPipeline=$true,Mandatory=$true)] [string]$StorageAccountName,
-    [Parameter(ValuefromPipeline=$true,Mandatory=$true)] [string]$ProfileShareName,
+    [Parameter(ValuefromPipeline=$true,Mandatory=$true)] [string]$ProfileShareName
 )
 
 ###################
